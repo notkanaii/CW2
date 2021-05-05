@@ -16,10 +16,9 @@ int buffer1[8000][8000];
 void load_file();
 SDL_Window *createWindow(char *title);
 SDL_Renderer *createRenderer(SDL_Window *window);
-void drawGrid(SDL_Renderer *r);
-void drawCells(SDL_Renderer *r, int a[][GRID_WIDTH]);
-void updateCells(int a[][GRID_WIDTH]); 
-int countLivingNeighbours(int a[][GRID_WIDTH], int x, int y);
+void drawGrid(SDL_Renderer *r, int cells[][GRID_WIDTH]);
+void update(int cells[][GRID_WIDTH]);
+int count(int cells[][GRID_WIDTH], int x, int y);
 void save_file();
 
 #endif

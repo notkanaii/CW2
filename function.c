@@ -5,39 +5,39 @@
 
 #include "function.h"
 
-void updateCells(int a[][GRID_WIDTH]){
+void update(int cells[][GRID_WIDTH]){
     int new[GRID_HEIGHT][GRID_WIDTH];
-    int cy, cx; // vertical count, horizontal count
+    int v, h; // vertical count, horizontal count
 
-    for(cy = 0; cy < GRID_HEIGHT; cy++){
-        for(cx = 0; cx < GRID_WIDTH; cx++){
-            if(a[cy][cx] == 1 && countLivingNeighbours(a, cx, cy) < 2) new[cy][cx] = 0;
-            else if(a[cy][cx] == 1 && (countLivingNeighbours(a, cx, cy) == 2 || countLivingNeighbours(a, cx, cy) == 3)) new[cy][cx] = 1;
-            else if(a[cy][cx] == 1 && countLivingNeighbours(a, cx, cy) > 3) new[cy][cx] = 0;
-            else if(a[cy][cx] == 0 && countLivingNeighbours(a, cx, cy) == 3) new[cy][cx] = 1;
-            else new[cy][cx] = 0;
+    for(v = 0; v < GRID_HEIGHT; v++){
+        for(h = 0; h < GRID_WIDTH; h++){
+            if(cells[v][h] == 1 && count(cells, h, v) < 2) new[v][h] = 0;
+            else if(cells[v][h] == 1 && (count(cells, h, v) == 2 || count(cells, h, v) == 3)) new[v][h] = 1;
+            else if(cells[v][h] == 1 && count(cells, h, v) > 3) new[v][h] = 0;
+            else if(cells[v][h] == 0 && count(cells, h, v) == 3) new[v][h] = 1;
+            else new[v][h] = 0;
         }
     }
-    for(cy = 0; cy < GRID_HEIGHT; cy++){
-        for(cx = 0; cx < GRID_WIDTH; cx++){
-            a[cy][cx] = new[cy][cx];
+    for(v = 0; v < GRID_HEIGHT; v++){
+        for(h = 0; h < GRID_WIDTH; h++){
+            cells[v][h] = new[v][h];
         }
     }
-    for(cy = 0; cy < GRID_HEIGHT; cy++){
-        for(cx = 0; cx < GRID_WIDTH; cx++){
-            buffer1[cy][cx] = new[cy][cx];
+    for(v = 0; v < GRID_HEIGHT; v++){
+        for(h = 0; h < GRID_WIDTH; h++){
+            buffer1[v][h] = new[v][h];
         }
     }
 }
 
-int countLivingNeighbours(int a[][GRID_WIDTH], int x, int y){
-    int count = 0, cx, cy;
+int count(int cells[][GRID_WIDTH], int x, int y){
+    int count = 0, h, v;
 
-    for(cy = y - 1; cy <= y + 1; cy++){
-        for(cx = x - 1; cx <= x + 1; cx++){
-            if(cx==x&&cy==y) continue;
-            if(!(cy < 0 || cx < 0 || cy >= GRID_HEIGHT || cx >= GRID_WIDTH)){
-                if(a[cy][cx] == 1)
+    for(v = y - 1; v <= y + 1; v++){
+        for(h = x - 1; h <= x + 1; h++){
+            if(h==x&&v==y) continue;
+            if(!(v < 0 || h < 0 || v >= GRID_HEIGHT || h >= GRID_WIDTH)){
+                if(cells[v][h] == 1)
                     count++;
             }
         }
@@ -45,7 +45,7 @@ int countLivingNeighbours(int a[][GRID_WIDTH], int x, int y){
     return count;
 }
 
-void drawGrid(SDL_Renderer *r){
+void drawGrid(SDL_Renderer *r, int cells[][GRID_WIDTH]){
     // Draw vertical grid lines
     int v,h=0;
     for(v = CELL_SIZE; v < SCREEN_WIDTH; v += CELL_SIZE){
@@ -60,22 +60,18 @@ void drawGrid(SDL_Renderer *r){
         //horizontal line
         SDL_RenderDrawLine(r, 0, h, SCREEN_WIDTH, h);
     }
-}
-
-void drawCells(SDL_Renderer *r, int c[][GRID_WIDTH]){
-    SDL_Rect cellRect;
-    cellRect.w = CELL_SIZE + 1;
-    cellRect.h = CELL_SIZE + 1;
-    int cx, cy;
-    for(cy = 0; cy < GRID_HEIGHT; cy++){
-        for(cx = 0; cx < GRID_WIDTH; cx++){
-            if(c[cy][cx] == 1){
+    SDL_Rect Rect;
+    Rect.w = CELL_SIZE + 1;
+    Rect.h = CELL_SIZE + 1;
+    for(v = 0; v < GRID_HEIGHT; v++){
+        for(h = 0; h < GRID_WIDTH; h++){
+            if(cells[v][h] == 1){
                 //x/y pos
-                cellRect.x = cx * CELL_SIZE;
-                cellRect.y = cy * CELL_SIZE;
+                Rect.x = h * CELL_SIZE;
+                Rect.y = v * CELL_SIZE;
 
                 SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
-                SDL_RenderFillRect(r, &cellRect);
+                SDL_RenderFillRect(r, &Rect);
             }
         }
     }
@@ -110,7 +106,6 @@ SDL_Renderer *createRenderer(SDL_Window *window){
         printf("Create renderer failed. %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
-
     return renderer;
 }
 
