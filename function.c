@@ -5,12 +5,11 @@
 
 #include "function.h"
 
-void update(int cells[][GRID_WIDTH]){
-    int new[GRID_HEIGHT][GRID_WIDTH];
+void update(int cells[][WIDTH]){
+    int new[HEIGHT][WIDTH];
     int v, h; // vertical count, horizontal count
-
-    for(v = 0; v < GRID_HEIGHT; v++){
-        for(h = 0; h < GRID_WIDTH; h++){
+    for(v = 0; v < HEIGHT; v++){
+        for(h = 0; h < WIDTH; h++){
             if(cells[v][h] == 1 && count(cells, h, v) < 2) new[v][h] = 0;
             else if(cells[v][h] == 1 && (count(cells, h, v) == 2 || count(cells, h, v) == 3)) new[v][h] = 1;
             else if(cells[v][h] == 1 && count(cells, h, v) > 3) new[v][h] = 0;
@@ -18,25 +17,26 @@ void update(int cells[][GRID_WIDTH]){
             else new[v][h] = 0;
         }
     }
-    for(v = 0; v < GRID_HEIGHT; v++){
-        for(h = 0; h < GRID_WIDTH; h++){
+    for(v = 0; v < HEIGHT; v++){
+        for(h = 0; h < WIDTH; h++){
             cells[v][h] = new[v][h];
         }
     }
-    for(v = 0; v < GRID_HEIGHT; v++){
-        for(h = 0; h < GRID_WIDTH; h++){
+    for(v = 0; v < HEIGHT; v++){
+        for(h = 0; h < WIDTH; h++){
             buffer1[v][h] = new[v][h];
         }
     }
 }
 
-int count(int cells[][GRID_WIDTH], int x, int y){
-    int count = 0, h, v;
-
+int count(int cells[][WIDTH], int x, int y){
+    int count = 0;
+    int v=0;
+    int h=0;
     for(v = y - 1; v <= y + 1; v++){
         for(h = x - 1; h <= x + 1; h++){
             if(h==x&&v==y) continue;
-            if(!(v < 0 || h < 0 || v >= GRID_HEIGHT || h >= GRID_WIDTH)){
+            if(!(v < 0 || h < 0 || v >= HEIGHT || h >= WIDTH)){
                 if(cells[v][h] == 1)
                     count++;
             }
@@ -45,7 +45,7 @@ int count(int cells[][GRID_WIDTH], int x, int y){
     return count;
 }
 
-void drawGrid(SDL_Renderer *r, int cells[][GRID_WIDTH]){
+void drawGrid(SDL_Renderer *r, int cells[][WIDTH]){
     // Draw vertical grid lines
     int v,h=0;
     for(v = CELL_SIZE; v < SCREEN_WIDTH; v += CELL_SIZE){
@@ -63,8 +63,8 @@ void drawGrid(SDL_Renderer *r, int cells[][GRID_WIDTH]){
     SDL_Rect Rect;
     Rect.w = CELL_SIZE + 1;
     Rect.h = CELL_SIZE + 1;
-    for(v = 0; v < GRID_HEIGHT; v++){
-        for(h = 0; h < GRID_WIDTH; h++){
+    for(v = 0; v < HEIGHT; v++){
+        for(h = 0; h < WIDTH; h++){
             if(cells[v][h] == 1){
                 //x/y pos
                 Rect.x = h * CELL_SIZE;

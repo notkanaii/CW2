@@ -6,19 +6,19 @@
 #include <stdbool.h>
 
 #define CELL_SIZE 20
-#define SCREEN_WIDTH (GRID_WIDTH * CELL_SIZE)
-#define SCREEN_HEIGHT (GRID_HEIGHT * CELL_SIZE)
+#define SCREEN_WIDTH (WIDTH * CELL_SIZE)
+#define SCREEN_HEIGHT (HEIGHT * CELL_SIZE)
 
 
-int GRID_WIDTH;
-int GRID_HEIGHT;
+int WIDTH;
+int HEIGHT;
 int buffer1[8000][8000];
 void load_file();
 SDL_Window *createWindow(char *title);
 SDL_Renderer *createRenderer(SDL_Window *window);
-void drawGrid(SDL_Renderer *r, int cells[][GRID_WIDTH]);
-void update(int cells[][GRID_WIDTH]);
-int count(int cells[][GRID_WIDTH], int x, int y);
+void drawGrid(SDL_Renderer *r, int cells[][WIDTH]);
+void update(int cells[][WIDTH]);
+int count(int cells[][WIDTH], int x, int y);
 void save_file();
 
 #endif

@@ -15,9 +15,9 @@ int main(int argc, char *argv[]){
     int cx, cy;
     if(choice==1){
         printf("\nSet grid height: ");
-        scanf("%d",&GRID_HEIGHT);
+        scanf("%d",&HEIGHT);
         printf("\nSet grid width: ");
-        scanf("%d",&GRID_WIDTH);
+        scanf("%d",&WIDTH);
     }
     else if(choice==2){
         char check;
@@ -29,9 +29,9 @@ int main(int argc, char *argv[]){
         if ((fp = fopen("file.txt", "r")) == NULL){
             printf("\nNo such file, create a new grid ");
             printf("\nSet grid height: ");
-            scanf("%d",&GRID_HEIGHT);
+            scanf("%d",&HEIGHT);
             printf("\nSet grid width: ");
-            scanf("%d",&GRID_WIDTH);
+            scanf("%d",&WIDTH);
             choice=1;
         }
         else if(fp){
@@ -40,15 +40,15 @@ int main(int argc, char *argv[]){
                 else if(check==' ');
                 else countw++;
             }
-            GRID_WIDTH=countw/counth;
-            GRID_HEIGHT=counth;
+            WIDTH=countw/counth;
+            HEIGHT=counth;
             fclose(fp);
         }
     }
-    int map[GRID_HEIGHT][GRID_WIDTH];
+    int map[HEIGHT][WIDTH];
     if(choice==1){
-        for(cy = 0; cy < GRID_HEIGHT; cy++){
-            for(cx = 0; cx < GRID_WIDTH; cx++){
+        for(cy = 0; cy < HEIGHT; cy++){
+            for(cx = 0; cx < WIDTH; cx++){
                 map[cy][cx] = 0;
             }
         }
@@ -56,16 +56,16 @@ int main(int argc, char *argv[]){
     else if(choice==2){
         FILE*fp;
         fp = fopen("file.txt", "r+");
-        for(cy=0;cy<GRID_HEIGHT;cy++){
-            for(cx=0;cx<GRID_WIDTH;cx++){
+        for(cy=0;cy<HEIGHT;cy++){
+            for(cx=0;cx<WIDTH;cx++){
                 fscanf(fp,"%d",&map[cy][cx]);
             }
             fgetc(fp);
         }
         fclose(fp);
     }
-    for(cy = 0; cy < GRID_HEIGHT; cy++){
-        for(cx = 0; cx < GRID_WIDTH; cx++){
+    for(cy = 0; cy < HEIGHT; cy++){
+        for(cx = 0; cx < WIDTH; cx++){
             buffer1[cy][cx] = map[cy][cx];
         }
     }
@@ -79,32 +79,32 @@ int main(int argc, char *argv[]){
     int posX, posY;
     bool leftmouse = false;
     bool rightmouse = false;
-	int last_time = 0;
+    int last_time = 0;
     int simulate_speed = 500;
     int paused = 1;
-    
-    
+
+
     while(1)
-	{
-		save_file();
+    {
+        save_file();
         while(SDL_PollEvent(&event) != 0)
-		{
+        {
             switch(event.type)
-			{
+            {
                 case SDL_QUIT:
                     return 1;
                     // Set the status of cells
                 case SDL_KEYDOWN:
                     if(event.key.keysym.sym == SDLK_SPACE)
-					{
+                    {
                         update(map);
-                        for(cy = 0; cy < GRID_HEIGHT; cy++){
-                            for(cx = 0; cx < GRID_WIDTH; cx++){
+                        for(cy = 0; cy < HEIGHT; cy++){
+                            for(cx = 0; cx < WIDTH; cx++){
                                 map[cy][cx] = buffer1[cy][cx];
                             }
                         }
                     }
-				case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP:
+                case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP:
                     switch(event.button.button){
                         case SDL_BUTTON_LEFT:
                             leftmouse = !leftmouse;
@@ -119,14 +119,14 @@ int main(int argc, char *argv[]){
                 bool isKeydown = event.type == SDL_KEYDOWN;
                 switch ( event.key.keysym.scancode )
                 {
-                case SDL_SCANCODE_LEFT:
-                    paused = isKeydown ^ paused;
-                    break;
+                    case SDL_SCANCODE_LEFT:
+                        paused = isKeydown ^ paused;
+                        break;
                 }
             }
             save_file();
         }
-         if ( !( ( SDL_GetTicks( ) - last_time ) < simulate_speed ) && !paused )
+        if ( !( ( SDL_GetTicks( ) - last_time ) < simulate_speed ) && !paused )
         {
             update(map);
             last_time = SDL_GetTicks( );
